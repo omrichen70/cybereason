@@ -45,8 +45,9 @@ if __name__ == "__main__":
                         help="Enter saving path", metavar="FILE")
     args = parser.parse_args()
     remainings = compProtos(args.frompath, args.topath)
+    frompath = args.frompath
     while(remainings):
-        frompath = args.frompath + '/' + remainings.pop(0)
+        frompath = frompath + '/' + remainings.pop(0)
         print("Getting into folder:" + frompath)
         remainings = compProtos(frompath, args.topath)
     print("Done generating protobuffs, results in folder: " + args.topath)
