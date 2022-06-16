@@ -14,27 +14,14 @@ def dir_path(string):
         raise NotADirectoryError(string)
 
 
-def getFiles(path):
-    files = [f for f in listdir(path) if isfile(join(path, f))]
-    return files
-
-
-def getDirs(path):
-    dirs = [d for d in listdir(path) if isdir(join(path, d))]
-    return dirs
-
-
 def compProtos(frompath, topath):
-    remainings = getDirs(frompath)
-    files = getFiles(frompath)
-    for i in range(len(files)):
-        # add prints
-        if files[i].endswith('.proto'):
-            print(
-                f'Currently generating file: {files[i]}, from path: {frompath}')
-            process = Popen(
-                f'python -m grpc_tools.protoc -I {frompath} --python_out={topath} --grpc_python_out={topath} {frompath}/{files[i]}')
-    return remainings
+    for dirpath, dirs, files in os.walk(frompath):
+        for filename in files:
+            if filename.endswith('.proto'):
+                print(
+                    f'Currently generating file: {filename}, from path: {dirpath}')
+                process = Popen(
+                    f'python -m grpc_tools.protoc -I {dirpath} --python_out={topath} --grpc_python_out={topath} {dirpath}/{filename}')
 
 
 if __name__ == "__main__":
@@ -44,10 +31,5 @@ if __name__ == "__main__":
     parser.add_argument('-to', dest="topath", type=dir_path, default=".",
                         help="Enter saving path", metavar="FILE")
     args = parser.parse_args()
-    remainings = compProtos(args.frompath, args.topath)
-    frompath = args.frompath
-    while(remainings):
-        frompath = frompath + '/' + remainings.pop(0)
-        print("Getting into folder:" + frompath)
-        remainings = compProtos(frompath, args.topath)
+    compProtos(args.frompath, args.topath)
     print("Done generating protobuffs, results in folder: " + args.topath)
