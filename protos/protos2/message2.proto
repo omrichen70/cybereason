@@ -1,0 +1,33 @@
+
+
+syntax = "proto3";
+
+package encryptmessage;
+
+message Person {
+  optional string name = 1;
+  optional int32 id = 2;
+  optional string message = 3;
+}
+
+service Decoder{
+  rpc decodeMessage(decodeRequest) returns (decodeResponse){}
+
+  rpc encodeMessage(encodeRequest) returns (encodeResponse){}
+}
+
+message decodeRequest{
+  string message = 1;
+}
+
+message decodeResponse{
+  string message = 1;
+}
+
+message encodeRequest{
+  string message = 1;
+}
+
+message encodeResponse{
+  string message = 1;
+}
